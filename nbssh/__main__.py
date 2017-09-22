@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """Usage:
-    nbssh [--debug][--refresh] QUERY
+    nbssh [--debug](--refresh|QUERY)
 
 Options:
     --debug        Log debug messages
@@ -41,7 +41,7 @@ config_location = "~/.nbssh"
 config = config_loader.load_config(config_location)
 if config == 0:
     sample_config = """Sample configuration:
-    
+
 [main]
 API_ADDRESS = https://netbox.yourdomain.com
 LOG_LOCATION = /var/log/nbssh.log
@@ -49,6 +49,7 @@ API_TOKEN = Token abc123
     """
     print(sample_config)
     sys.exit()
+
 logging.basicConfig(level=log_level,
                     format='[%(asctime)s][%(levelname)s][%(name)s] \
                     %(message)s',
@@ -60,27 +61,40 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 def main():
     query = arguments['QUERY']
 
-    file_location = "~/.nbssh-cache"
-    filename = os.path.expanduser("%s" % file_location)
+    # file_location = "~/.nbssh-cache"
+    # filename = os.path.expanduser("%s" % file_location)
 
-    if arguments['--refresh']:
-        print("Refreshing from Netbox API...")
-        all_devices = get_all_devices(config.get('main', 'API_ADDRESS'),
-                                   config.get('main', 'API_TOKEN'))
-        save_devices_to_file(all_devices, filename)
-    else:
-        all_devices = read_devices_from_file(filename)
+    # if arguments['--refresh']:
+    #     print("Refreshing from Netbox API...")
+    #     all_devices = get_all_devices(config.get('main', 'API_ADDRESS'),
+    #                                config.get('main', 'API_TOKEN'))
+    #     save_devices_to_file(all_devices, filename)
+    #     sys.exit()
 
-    i = 1
+    # all_devices = read_devices_from_file(filename)
+
+    # i = 1
+    # displayed_device_list_length = 20
+    # devices = []
+    # for device in all_devices:
+    #     if i < displayed_device_list_length:
+    #         if query in  device.name:
+    #             devices.append(device)
+    #             i += 1
+    # if i >= displayed_device_list_length:
+    #     print("Displaying the first %s results only. You might want to try a more specific search." % displayed_device_list_length)
+
     displayed_device_list_length = 20
-    devices = []
-    for device in all_devices:
-        if i < displayed_device_list_length:
-            if query in device.name:
-                devices.append(device)
-                i += 1
-    if i >= displayed_device_list_length:
+    devices = get_devices_by_query(config.get('main', 'API_ADDRESS'),
+                                   config.get('main', 'API_TOKEN'),
+                                   query,
+                                   displayed_device_list_length)
+
+    if len(devices) >= displayed_device_list_length:
         print("Displaying the first %s results only. You might want to try a more specific search." % displayed_device_list_length)
+    elif len(devices) == 0:
+        print("No results.")
+        sys.exit()
 
     pick_options = []
     for device in devices:
@@ -125,7 +139,7 @@ def get_all_devices(NB_API_ADDRESS, API_TOKEN):
 
     return devices
 
-def get_devices_by_query(NB_API_ADDRESS, API_TOKEN, query):
+def get_devices_by_query(NB_API_ADDRESS, API_TOKEN, query, limit):
     """ Reads each server from the Netbox API, creates a Server object,
     """
 
@@ -137,7 +151,7 @@ def get_devices_by_query(NB_API_ADDRESS, API_TOKEN, query):
     devices = []
 
     try:
-        url = '%s/api/dcim/devices/?q=%s' % (NB_API_ADDRESS, query)
+        url = '%s/api/dcim/devices/?q=%s&limit=%s' % (NB_API_ADDRESS, query, limit)
         logger.debug(url)
         r = requests.get(url, headers=headers, verify=False)
     except Exception as e:
