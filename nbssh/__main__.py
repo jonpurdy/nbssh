@@ -61,7 +61,6 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 def main():
     query = arguments['QUERY']
-
     # file_location = "~/.nbssh-cache"
     # filename = os.path.expanduser("%s" % file_location)
 
@@ -98,8 +97,13 @@ def main():
         sys.exit()
 
     pick_options = []
+    desired_length = 0
     for device in devices:
-        pick_options.append(device.name)
+        if len(device.name) > desired_length:
+            desired_length = len(device.name)
+    for device in devices:
+        #pick_options.append("%s  →  %s" % (make_string_this_length(device.name, 30), device.primary_ip_address))
+        pick_options.append(make_string_this_length(device.name, desired_length))
 
     questions = [inquirer.List('selection',
                                 message="Which device?",
@@ -111,7 +115,7 @@ def main():
     selection = answers['selection']
 
     for device in devices: 
-        if device.name == selection:
+        if device.name in selection:
             os.system("ssh root@%s" % device.primary_ip_address)
 
 def get_all_devices(NB_API_ADDRESS, API_TOKEN):
@@ -200,6 +204,14 @@ def read_devices_from_file(filename):
             print("Couldn't read configuration file.")
     else:
         print("Couldn't open file")
+
+def make_string_this_length(input_string, desired_length):
+
+    difference = desired_length - len(input_string)
+    while difference > -1:
+        input_string += " "
+        difference -= 1
+    return input_string
 
 class Device(object):
     """ Server object.
