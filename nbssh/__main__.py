@@ -44,7 +44,6 @@ if config == 0:
 
 [main]
 API_ADDRESS = https://netbox.yourdomain.com
-LOG_LOCATION = /var/log/nbssh.log
 API_TOKEN = Token abc123
     """
     print(sample_config)
@@ -52,8 +51,7 @@ API_TOKEN = Token abc123
 
 logging.basicConfig(level=log_level,
                     format='[%(asctime)s][%(levelname)s][%(name)s] \
-                    %(message)s',
-                    filename=config.get('main', 'LOG_LOCATION'))
+                    %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 
