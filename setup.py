@@ -11,7 +11,7 @@ config = {
     'url': 'n/a',
     'download_url': 'n/a',
     'author_email': 'jon@jonpurdy.com',
-    'version': 1,
+    'version': 0.1,
     'install_requires': [
     'requests',
     'docopt'
