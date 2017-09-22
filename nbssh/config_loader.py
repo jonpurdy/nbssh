@@ -4,12 +4,10 @@ import os
 import configparser
 
 
-def load_config():
+def load_config(config_location):
     '''
     Loads config from config.
     '''
-
-    config_location = "~/.nbssh"
 
     # Getting configuration first
     file_path = os.path.expanduser(config_location)
@@ -24,5 +22,6 @@ def load_config():
     else:
         print("Couldn't open config file. Has it been created as %s ?"
               % config_location)
+        return 0
 
     return config

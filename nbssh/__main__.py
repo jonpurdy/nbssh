@@ -37,7 +37,18 @@ else:
     log_level = logging.INFO
 
 # Set configuration and logging up first
-config = config_loader.load_config()
+config_location = "~/.nbssh"
+config = config_loader.load_config(config_location)
+if config == 0:
+    sample_config = """Sample configuration:
+    
+[main]
+API_ADDRESS = https://netbox.yourdomain.com
+LOG_LOCATION = /var/log/nbssh.log
+API_TOKEN = Token abc123
+    """
+    print(sample_config)
+    sys.exit()
 logging.basicConfig(level=log_level,
                     format='[%(asctime)s][%(levelname)s][%(name)s] \
                     %(message)s',
