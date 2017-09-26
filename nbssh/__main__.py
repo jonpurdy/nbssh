@@ -113,7 +113,7 @@ def main():
                     "mark_color": "white",
                     "brackets_color": "bright_magenta",
                     "default_color": "white_on_magenta",
-                 }
+                    }
                 }
 
     questions = [inquirer.List('selection',
