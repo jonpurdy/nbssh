@@ -7,4 +7,4 @@
 
 ## Installation
 
-Simply download a released version and run `pip install nbssh.tar.gz`.
+Simply download a released version and run `pip3 install nbssh.tar.gz`.
