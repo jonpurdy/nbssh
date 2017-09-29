@@ -11,11 +11,12 @@ config = {
     'url': 'n/a',
     'download_url': 'n/a',
     'author_email': 'jon@jonpurdy.com',
-    'version': 0.2,
+    'version': 0.3,
     'install_requires': [
     'requests',
     'docopt',
-    'inquirer'
+    'inquirer',
+    'blessings'
     ],
     'packages': ['nbssh'],
     'scripts': [],

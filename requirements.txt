@@ -1,5 +1,6 @@
 requests
 docopt
 inquirer
+blessings
 
 # anything below here is added by pip freeze automatically

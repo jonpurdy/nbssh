@@ -1,11 +1,11 @@
 from nose.tools import *
 from nbssh.config_loader import load_config
 
-try:
-    config = load_config()
-except AttributeError as e:
-    print(e)
-    print("Does the file have the correct format?")
+# try:
+#     config = load_config("~/.nbssh")
+# except AttributeError as e:
+#     print(e)
+#     print("Does the file have the correct format?")
 
 def setup():
     print("SETUP!")
