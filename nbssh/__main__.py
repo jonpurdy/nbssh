@@ -23,6 +23,7 @@ import requests
 import docopt
 #import pick
 import inquirer
+from blessings import Terminal
 
 # self
 import config_loader
@@ -83,6 +84,8 @@ def main():
     # if i >= displayed_device_list_length:
     #     print("Displaying the first %s results only. You might want to try a more specific search." % displayed_device_list_length)
 
+    term = Terminal()
+
     displayed_device_list_length = 20
     devices = get_devices_by_query(config.get('main', 'API_ADDRESS'),
                                    config.get('main', 'API_TOKEN'),
@@ -91,6 +94,11 @@ def main():
 
     if len(devices) >= displayed_device_list_length:
         print("Displaying the first %s results only. You might want to try a more specific search." % displayed_device_list_length)
+    # if there's a single result, just SSH directly without displaying the menu
+    elif len(devices) == 1:
+        print(term.bright_magenta("Single result. Going directly to %s..." % devices[0].name))
+        os.system("ssh root@%s" % devices[0].primary_ip_address)
+        sys.exit()
     elif len(devices) == 0:
         print("No results.")
         sys.exit()
