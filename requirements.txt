@@ -2,5 +2,6 @@ requests
 docopt
 inquirer
 blessings
+configparser
 
 # anything below here is added by pip freeze automatically

@@ -10,12 +10,13 @@ config = {
     'author': 'Jon Purdy',
     'url': 'https://github.com/jonpurdy/nbssh/',
     'author_email': 'jon+nbssh@jonpurdy.com',
-    'version': 0.3,
+    'version': 0.4.dev2,
     'install_requires': [
     'requests',
     'docopt',
     'inquirer',
-    'blessings'
+    'blessings',
+    'configparser'
     ],
     'packages': ['nbssh'],
     'scripts': [],
