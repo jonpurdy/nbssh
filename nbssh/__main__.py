@@ -18,6 +18,7 @@ import json
 import time
 from pprint import pprint
 import shutil # for getting terminal window height
+from backports.shutil_get_terminal_size import get_terminal_size
 
 # 3rd party
 import requests
