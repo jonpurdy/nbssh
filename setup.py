@@ -16,7 +16,8 @@ config = {
     'docopt',
     'inquirer',
     'blessings',
-    'configparser'
+    'configparser',
+    'backports.shutil_get_terminal_size'
     ],
     'packages': ['nbssh'],
     'scripts': [],
