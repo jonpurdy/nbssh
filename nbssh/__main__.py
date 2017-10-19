@@ -17,6 +17,8 @@ import os
 import json
 import time
 from pprint import pprint
+import shutil # for getting terminal window height
+from backports.shutil_get_terminal_size import get_terminal_size
 
 # 3rd party
 import requests
@@ -46,6 +48,7 @@ if config == 0:
 API_ADDRESS = https://netbox.yourdomain.com
 LOG_LOCATION = /var/log/nbssh.log
 API_TOKEN = Token abc123
+NO_OF_RESULTS = 10
     """
     print(sample_config)
     sys.exit()
@@ -86,7 +89,25 @@ def main():
 
     term = Terminal()
 
-    displayed_device_list_length = 20
+    term_height = get_terminal_size()[1]
+
+    try:
+        config.get('main', 'NO_OF_RESULTS')
+        try:
+
+            if 1 <= int(config.get('main', 'NO_OF_RESULTS')) <= 100: 
+                displayed_device_list_length = int(config.get('main', 'NO_OF_RESULTS'))
+            else:
+                print("NO_OF_RESULTS must be an positive integer between 1 and 100. Using terminal height instead.")
+                displayed_device_list_length = term_height - 5
+
+        except Exception as e:
+            print("%s\nNO_OF_RESULTS must be an positive integer between 1 and 100. Using terminal height instead." % e)
+            displayed_device_list_length = term_height - 6
+
+    except Exception as e:
+        displayed_device_list_length = term_height - 4
+
     devices = get_devices_by_query(config.get('main', 'API_ADDRESS'),
                                    config.get('main', 'API_TOKEN'),
                                    query,
