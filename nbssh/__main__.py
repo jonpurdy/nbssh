@@ -87,6 +87,8 @@ def main():
     # if i >= displayed_device_list_length:
     #     print("Displaying the first %s results only. You might want to try a more specific search." % displayed_device_list_length)
 
+    check_for_update()
+
     term = Terminal()
 
     term_height = get_terminal_size()[1]
@@ -252,6 +254,15 @@ def make_string_this_length(input_string, desired_length):
         input_string += " "
         difference -= 1
     return input_string
+
+def check_for_update():
+    try:
+        r = requests.get('http://pypi.python.org/pypi/nbssh/json')
+        latest_version = (r.json()["info"]["version"])
+        return latest_version
+    except Exception as e:
+        print(e)
+        print("Couldn't check for updates.")
 
 class Device(object):
     """ Server object.
