@@ -89,16 +89,17 @@ def main():
 
     term = Terminal()
 
-    term_height = shutil.get_terminal_size()[1]
+    term_height = get_terminal_size()[1]
 
     try:
         config.get('main', 'NO_OF_RESULTS')
         try:
+
             if 1 <= int(config.get('main', 'NO_OF_RESULTS')) <= 100: 
                 displayed_device_list_length = int(config.get('main', 'NO_OF_RESULTS'))
             else:
                 print("NO_OF_RESULTS must be an positive integer between 1 and 100. Using terminal height instead.")
-            displayed_device_list_length = term_height - 5
+                displayed_device_list_length = term_height - 5
 
         except Exception as e:
             print("%s\nNO_OF_RESULTS must be an positive integer between 1 and 100. Using terminal height instead." % e)
