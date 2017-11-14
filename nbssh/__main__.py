@@ -63,6 +63,7 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 
 def main():
+    logger.debug("Hello.")
     query = arguments['QUERY']
     # file_location = "~/.nbssh-cache"
     # filename = os.path.expanduser("%s" % file_location)
@@ -156,8 +157,10 @@ def main():
         exit()
     selection = answers['selection']
 
-    for device in devices: 
-        if device.name in selection:
+    for device in devices:
+        # selection is the column width, so removing whitespace
+        if device.name == selection.replace(" ", ""):
+            logger.info("SSHing into %s..." % device.primary_ip_address)
             os.system("ssh root@%s" % device.primary_ip_address)
 
 def get_all_devices(NB_API_ADDRESS, API_TOKEN):
