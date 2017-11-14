@@ -3,5 +3,6 @@ docopt
 inquirer
 blessings
 configparser
+backports.shutil_get_terminal_size
 
 # anything below here is added by pip freeze automatically

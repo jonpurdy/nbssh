@@ -63,6 +63,7 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 
 def main():
+    logger.debug("Hello.")
     query = arguments['QUERY']
     # file_location = "~/.nbssh-cache"
     # filename = os.path.expanduser("%s" % file_location)
@@ -86,6 +87,8 @@ def main():
     #             i += 1
     # if i >= displayed_device_list_length:
     #     print("Displaying the first %s results only. You might want to try a more specific search." % displayed_device_list_length)
+
+    check_for_update()
 
     term = Terminal()
 
@@ -154,8 +157,10 @@ def main():
         exit()
     selection = answers['selection']
 
-    for device in devices: 
-        if device.name in selection:
+    for device in devices:
+        # selection is the column width, so removing whitespace
+        if device.name == selection.replace(" ", ""):
+            logger.info("SSHing into %s..." % device.primary_ip_address)
             os.system("ssh root@%s" % device.primary_ip_address)
 
 def get_all_devices(NB_API_ADDRESS, API_TOKEN):
@@ -252,6 +257,15 @@ def make_string_this_length(input_string, desired_length):
         input_string += " "
         difference -= 1
     return input_string
+
+def check_for_update():
+    try:
+        r = requests.get('http://pypi.python.org/pypi/nbssh/json')
+        latest_version = (r.json()["info"]["version"])
+        return latest_version
+    except Exception as e:
+        print(e)
+        print("Couldn't check for updates.")
 
 class Device(object):
     """ Server object.
