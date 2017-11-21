@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """Usage:
     nbssh [--debug](--refresh|QUERY)
@@ -8,6 +9,8 @@ Options:
     --refresh      Refresh the list of servers from Netbox
     --help         Print this help screen
 """
+
+from __future__ import unicode_literals
 
 # Standard library
 import sys
@@ -133,8 +136,11 @@ def main():
         if len(device.name) > desired_length:
             desired_length = len(device.name)
     for device in devices:
-        #pick_options.append("%s  →  %s" % (make_string_this_length(device.name, 30), device.primary_ip_address))
-        pick_options.append(make_string_this_length(device.name, desired_length))
+        # adds ip address
+        displayed = '%s %s  →  %s' % (device.site, make_string_this_length(device.name, desired_length), device.primary_ip_address)
+        pick_options.append((displayed, device.name))
+        # # normal, just hostname
+        #pick_options.append(make_string_this_length(device.name, desired_length))
 
     jon_theme = {"List": {
                     "selection_color": "black_on_cyan",
@@ -148,14 +154,15 @@ def main():
                     }
                 }
 
-    questions = [inquirer.List('selection',
+    questions = [inquirer.List('device',
                                 message="Which device?",
                                 choices=pick_options,
                 ),]
     answers = inquirer.prompt(questions, theme=inquirer.themes.load_theme_from_dict(jon_theme))
+    #answers = inquirer.prompt(questions)
     if answers is None:
         exit()
-    selection = answers['selection']
+    selection = answers['device']
 
     for device in devices:
         # selection is the column width, so removing whitespace
@@ -209,13 +216,14 @@ def get_devices_by_query(NB_API_ADDRESS, API_TOKEN, query, limit):
 
     i = 1
     # print(pprint(r.json()['results']))
-
+    # exit()
     for item in r.json()['results']:
 
         if item['primary_ip']:
             this_device = Device(device_id=i,
                                  name=item["name"],
-                                 primary_ip_address=item['primary_ip']['address'][:-3])
+                                 primary_ip_address=item['primary_ip']['address'][:-3],
+                                 site=item['site']['name'])
             devices.append(this_device)
             i += 1
 
@@ -279,10 +287,11 @@ class Device(object):
     authorized_keys = ""
     site = ""
 
-    def __init__(self, device_id, name, primary_ip_address):
+    def __init__(self, device_id, name, primary_ip_address, site):
         self.device_id = device_id
         self.name = name
         self.primary_ip_address = primary_ip_address
+        self.site = site
 
 
 if __name__ == '__main__':
