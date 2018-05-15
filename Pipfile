@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+docopt = "*"
+inquirer = "*"
+blessings = "*"
+configparser = "*"
+"backports.shutil_get_terminal_size" = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
